@@ -91,7 +91,7 @@ class Interest:
                 if user.get(self.user):
                     user[self.user]['interest'] = self.interest
         with open('user.json', 'w', encoding='utf-8') as file:
-            json.dump(users, file)
+            json.dump(users, file, indent=4)
 
     def show_interest_news(self):
         """Show the news of the user's interest"""
@@ -109,7 +109,7 @@ class Interest:
             return random.choice(food_list)
 
     @staticmethod
-    def show_top_100_songs(number=100):
+    def show_top_10_songs(number=10):
         """Show the top 100 songs"""
         url = "https://www.billboard.com/charts/hot-100/"
 

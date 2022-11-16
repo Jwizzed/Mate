@@ -64,7 +64,7 @@ class Login:
             except JSONDecodeError:
                 with open('user.json', 'w', encoding="utf-8") as writable_file:
                     food = []
-                    json.dump(food, writable_file)
+                    json.dump(food, writable_file, indent=4)
                     users = json.load(file)
             for user in users:
                 try:
@@ -89,7 +89,7 @@ class Login:
                     }
                 }
             )
-            json.dump(data, json_file)
+            json.dump(data, json_file, indent=4)
 
     def check_register(self):
         """Check if the user is registered by checking both username and
@@ -115,6 +115,6 @@ class Login:
                     if user.get(self.user):
                         users.remove(user)
                         with open('user.json', 'w', encoding="utf-8") as _file:
-                            json.dump(users, _file)
+                            json.dump(users, _file, indent=4)
                         return True
             return False
