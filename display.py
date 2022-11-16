@@ -2,6 +2,7 @@ import turtle
 from login import Login
 import time
 from interest import Interest
+from mail import Mail
 
 Button_x = -150
 Button_y = 0
@@ -14,6 +15,7 @@ class Display:
         self.writer = turtle.Pen()
         self.screen = turtle.Screen()
         self.loging = None
+        self.mail = None
 
     def init_screen(self, title, bg):
         self.writer.clear()
@@ -140,20 +142,20 @@ class Display:
         self.writer.write("Back", font=('Arial', 15, 'normal'),
                           align="left")
 
-    def inside_interest_button(self):
-        self.writer.penup()
-        self.writer.color("white")
-        self.writer.goto(-416.0, -202.0)
-        self.writer.begin_fill()
-        self.writer.goto(-416.0 + 100, -202.0)
-        self.writer.goto(-416.0 + 100, -252.0)
-        self.writer.goto(-416.0, -252.0)
-        self.writer.end_fill()
-        self.writer.goto(-430.0, -237.0)
-        self.writer.forward(50)
-        self.writer.color("brown")
-        self.writer.write("Back", font=('Arial', 15, 'normal'),
-                          align="left")
+    # def inside_interest_button(self):
+    #     self.writer.penup()
+    #     self.writer.color("white")
+    #     self.writer.goto(-416.0, -202.0)
+    #     self.writer.begin_fill()
+    #     self.writer.goto(-416.0 + 100, -202.0)
+    #     self.writer.goto(-416.0 + 100, -252.0)
+    #     self.writer.goto(-416.0, -252.0)
+    #     self.writer.end_fill()
+    #     self.writer.goto(-430.0, -237.0)
+    #     self.writer.forward(50)
+    #     self.writer.color("brown")
+    #     self.writer.write("Back", font=('Arial', 15, 'normal'),
+    #                       align="left")
 
     # Login/Register
     def login(self) -> None:
@@ -216,13 +218,6 @@ class Display:
         self.note_button()
         self.mail_button()
 
-    def interest_screen(self):
-        self.init_screen("Interest", "background/interest.png")
-        self.writer.goto(0, 0)
-        self.writer.color("brown")
-        _interest = Interest(self.loging)
-        self.four_interest_buttons()
-        self.screen.onclick(self.four_interest_click)
 
     def four_interest_buttons(self):
         self.back_button()
@@ -285,50 +280,48 @@ class Display:
     def four_interest_click(self, x, y):
         interesting = Interest(self.loging)
         if -225.0 < x < -25.0 and 120 > y > 20:
-            interesting.show_something_to_eat()
+            self.any_screen("", "Nom nom nom!")
+            self.function_choice(interesting.show_something_to_eat)
+
         elif -225.0 + 250 < x < -25.0 + 250 and 120 > y > 20:
-            interesting.show_top_100_songs()
+            self.any_screen("", "Interest")
+
         elif -225.0 < x < -25.0 and -20 > y > -120:
-            number = self.screen.textinput("", "How many news do you want?")
+            number = int(self.screen.textinput("",
+                                               "How many news do you want?"))
             interesting.show_bbc_new(interesting.interest, number)
-            #make another screen for take interest input
+            # make another screen for take interest input
         elif -225.0 + 250 < x < -25.0 + 250 and -20 > y > -120:
-            interesting.show_fortune_telling()
+            self.any_screen("", "Fortune.")
+            self.function_choice(interesting.show_fortune_telling)
 
         if -416.0 + 100 >= x >= -416.0:
             if -252.0 <= y <= -202.0:
                 self.menu()
                 self.screen.onclick(self.menu_click)
 
-    def weather_screen(self):
-        self.init_screen("Weather", "background/normal.png")
-        self.writer.goto(0, 0)
-        self.writer.color("brown")
-        self.writer.write("Weather", font=('Arial', 20, 'normal'),
-                          align="center")
-        self.back_button()
-        self.screen.onclick(d.back_click)
+    def function_choice(self, func):
+        ask = self.screen.textinput("",
+                                    "Send mail, "
+                                    "print or exit? (m/p/e): ").lower()
+        while ask != "e":
+            if ask == "p":
+                self.any_screen("Wish!",
+                                func())
+            elif ask == "m":
+                self.mail = Mail(self.loging)
+                self.mail.send_mail(func())
+                self.any_screen("Mail", "Mail was sent.")
+            elif ask == "e":
+                break
+            ask = self.screen.textinput("",
+                                        "Send mail, "
+                                        "print or exit? (m/p/e): ").lower()
+            self.back_button()
+            self.screen.onclick(d.back_click)
 
-    def note_screen(self):
-        self.init_screen("Note", "background/normal.png")
-        self.writer.goto(0, 0)
-        self.writer.color("brown")
-        self.writer.write("Note", font=('Arial', 20, 'normal'),
-                          align="center")
-        self.back_button()
-        self.screen.onclick(d.back_click)
-
-    def mail_screen(self):
-        self.init_screen("Mail", "background/normal.png")
-        self.writer.goto(0, 0)
-        self.writer.color("brown")
-        self.writer.write("Mail", font=('Arial', 20, 'normal'),
-                          align="center")
-        self.back_button()
-        self.screen.onclick(d.back_click)
-
-    def any_screen(self, title="", message=""):
-        self.init_screen(title, "background/normal.png")
+    def any_screen(self, title="", message="", png="background/normal.png"):
+        self.init_screen(title, png)
         self.writer.goto(0, 0)
         self.writer.color("brown")
         self.writer.write(message, font=('Arial', 20, 'normal'),
@@ -338,13 +331,23 @@ class Display:
     def menu_click(self, x, y):
         if Button_x + ButtonLength >= Button_x <= x:
             if Button_y + 75 <= y <= Button_y + 75 + ButtonWidth:
-                self.interest_screen()
+                self.any_screen(png="background/interest.png")
+                self.four_interest_buttons()
+                self.screen.onclick(self.four_interest_click)
+
             if Button_y <= y <= Button_y + ButtonWidth:
-                self.weather_screen()
+                self.any_screen(png="background/weather.png")
+                self.back_button()
+                self.screen.onclick(self.back_click)
             if Button_y - 75 <= y <= Button_y - 75 + ButtonWidth:
-                self.note_screen()
+                self.any_screen(png="background/note.png")
+                self.back_button()
+                self.screen.onclick(self.back_click)
             if Button_y - 145 <= y <= Button_y - 145 + ButtonWidth:
-                self.mail_screen()
+                self.any_screen(png="background/mail.png")
+                self.back_button()
+                self.screen.onclick(self.back_click)
+
 
     def login_register_click(self, x, y):
         if Button_x + ButtonLength >= Button_x <= x:
