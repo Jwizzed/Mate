@@ -80,10 +80,8 @@ class Interest:
 
     def change_interest(self, new_interest):
         """Add the user's interest"""
-        _list = []
-        for i in new_interest.split():
-            _list.append(self.all_toppics[int(i)])
-
+        _list = [self.all_toppics[int(interest)]
+                 for interest in new_interest.split()]
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
             if self.user in users:

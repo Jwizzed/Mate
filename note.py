@@ -38,13 +38,11 @@ class Note:
                     return "You don't have any note."
         return _list
 
-    def delete_note(self):
+    def delete_note(self, deadline):
         """Delete the note from the user's note list"""
-
-        date = input("Enter the date of the note you want to delete: ")
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
             if self.user in users:
-                users[self.user]['Note'].pop(date)
+                users[self.user]['Note'].pop(deadline)
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)

@@ -145,7 +145,7 @@ class Display:
         self.writer.goto(300, -200)
         self.writer.goto(145, -200)
         self.writer.end_fill()
-        self.writer.goto(210-len(msg)-10, -180)
+        self.writer.goto(220 - len(msg), -180)
         self.writer.color("white")
         self.writer.write(msg, font=('Arial', 15, 'normal'),
                           align="left")
@@ -164,6 +164,142 @@ class Display:
         self.writer.write("Back", font=('Arial', 15, 'normal'),
                           align="left")
         self.screen.onclick(func)
+
+    def mail_button(self):
+        # add interest button
+        self.writer.penup()
+        self.writer.color("brown")
+        self.writer.goto(-305, -140)
+        self.writer.begin_fill()
+        self.writer.goto(-150, -140)
+        self.writer.goto(-150, -200)
+        self.writer.goto(-305, -200)
+        self.writer.end_fill()
+        self.writer.goto(-260, -180)
+        self.writer.color("white")
+        self.writer.write("Send mail", font=('Arial', 15, 'normal'),
+                          align="left")
+        self.change_interest_button("Change        ", "")
+        self.screen.onclick(self.mail_click)
+
+
+    def delete_button(self, func):
+        # delete button
+        self.writer.penup()
+        self.writer.color("brown")
+        self.writer.goto(-305, -140)
+        self.writer.begin_fill()
+        self.writer.goto(-150, -140)
+        self.writer.goto(-150, -200)
+        self.writer.goto(-305, -200)
+        self.writer.end_fill()
+        self.writer.goto(-250, -180)
+        self.writer.color("white")
+        self.writer.write("Delete", font=('Arial', 15, 'normal'),
+                          align="left")
+        self.change_interest_button("Add", "")
+        self.screen.onclick(func)
+
+    def delete_click(self, x, y):
+        # Add
+        if 145 < x < 300 and -140 > y > -200:
+            self.any_screen()
+            note = Note(self.loging)
+            while True:
+                deadline = self.screen.textinput(
+                    "", "Enter the deadline date (day/month/year): ")
+                if deadline.count("/") != 2:
+                    self.any_screen("", "Wrong format. Try again.")
+                    self.back_button()
+                    continue
+                else:
+                    break
+
+            notes = self.screen.textinput("", "Enter the note: ")
+            note.add_note(deadline, notes)
+            self.any_screen("", "Note added.")
+
+        # Delete
+        if -305 < x < -150 and -140 > y > -200:
+            self.any_screen()
+            note = Note(self.loging)
+            while True:
+                deadline = self.screen.textinput(
+                    "", "Enter the deadline date (day/month/year): ")
+                if deadline.count("/") != 2:
+                    self.any_screen("", "Wrong format. Try again.")
+                    continue
+                else:
+                    break
+            note.delete_note(deadline)
+            self.any_screen("", "Note deleted.")
+
+        self.back_button()
+
+    def mail_click(self, x, y):
+        # add
+        mail = Mail(self.loging)
+        if 145 < x < 300 and -140 > y > -200:
+            self.any_screen()
+            self.writer.goto(-260, 100)
+            self.writer.color("brown")
+            self.writer.write("1.Food - Every morning, one of the menus will "
+                              "be delivered to you.",
+                              font=('Arial', 15, 'normal'))
+            self.writer.goto(-260, 50)
+            self.writer.write("2. Song - Every morning, you will receive a "
+                              "list of the ten hottest songs right now on "
+                              "Billboard.", font=('Arial', 15, 'normal'))
+
+            self.writer.goto(-260, 0)
+            self.writer.write("3. Fortune - Every morning, you 'll receive a "
+                              "fortune-telling session.",
+                              font=('Arial', 15, 'normal'))
+
+            self.writer.goto(-260, -50)
+            self.writer.write("4. Weather - Every morning, you will receive "
+                              "the weather forecast for the day.",
+                              font=('Arial', 15, 'normal'))
+
+            self.writer.goto(-260, -100)
+            self.writer.write("5. News - Every morning, one of each of your "
+                              "interesting news topics will be delivered "
+                              "to you.", font=('Arial', 15, 'normal'))
+            topics = self.screen.textinput("", "Enter the number of topics you"
+                                               "are interested in "
+                                               "(Ex. 1 3 4):")
+            convert_number_to_topic = {1: "Food", 2: "Song", 3: "Fortune",
+                                       4: "Weather", 5: "News"}
+            topics = [convert_number_to_topic[int(index)] for index in
+                      topics.split()]
+            mail.change_topics_to_send(topics)
+            self.any_screen("", "News changed.")
+
+        # Delete
+        if -305 < x < -150 and -140 > y > -200:
+            self.any_screen()
+            self.writer.goto(-200, 100)
+            self.writer.write("List of subscribed topics: ",
+                              font=('Arial', 25, 'normal'))
+            for index, news in enumerate(mail.topics_to_send):
+                self.writer.goto(-200, 100 - (index + 1) * 50)
+                self.writer.color("brown")
+                self.writer.write(f"{index + 1}.{news}",
+                                  font=('Arial', 15, 'normal'))
+            ask = self.screen.textinput("Agree? (y/n)", f"The information will"
+                                                        f" be sent to "
+                                                        f"{mail.mymail} "
+                                                        f"every morning."
+                                                        f"").lower()
+            if ask == "y":
+                # mail.send_mail()
+                self.any_screen("", "Mail sent.")
+            elif ask == "n":
+                self.any_screen("", "Mail not sent.")
+            else:
+                self.any_screen("", "Wrong input. Mail not sent.")
+
+        self.back_button()
 
     def four_interest_buttons(self):
         self.back_button()
@@ -268,8 +404,6 @@ class Display:
         time.sleep(0.75)
         self.menu()
 
-
-
     # Screen
     def menu(self):
         self.writer.clear()
@@ -307,7 +441,7 @@ class Display:
                               font=('Arial', 15, 'normal'))
         try:
             weather.show_weather()[12]
-        except:
+        except IndexError:
             pass
         else:
             self.screen.textinput("Alert!",
@@ -321,11 +455,13 @@ class Display:
                 self.four_interest_buttons()
                 self.screen.onclick(self.four_interest_click)
 
+            # weather
             if Button_y <= y <= Button_y + ButtonWidth:
                 self.any_screen(png="background/weather.png")
                 self.weather_screen()
                 self.back_button()
 
+            # note
             if Button_y - 75 <= y <= Button_y - 75 + ButtonWidth:
                 self.any_screen(png="background/note.png")
                 note = Note(self.loging)
@@ -341,12 +477,24 @@ class Display:
                 else:
                     self.writer.write("You don't have any note.",
                                       font=('Arial', 20, 'normal'))
-                self.change_interest_button("Add note", self.add_note_click)
 
-
+                self.delete_button(self.delete_click)
+            # mail
             if Button_y - 145 <= y <= Button_y - 145 + ButtonWidth:
                 self.any_screen(png="background/mail.png")
-                self.back_button()
+                mails = Mail(self.loging)
+                self.writer.goto(-200, 100)
+                self.writer.write("List of subscribed topics: ",
+                                  font=('Arial', 25, 'normal'))
+                if mails.topics_to_send:
+                    for index, mail in enumerate(mails.topics_to_send):
+                        self.writer.goto(-200, 50 - (index * 30))
+                        self.writer.write(mail, font=('Arial', 20, 'normal'))
+                else:
+                    self.writer.goto(-200, 50)
+                    self.writer.write("You don't have any.",
+                                      font=('Arial', 20, 'normal'))
+                self.mail_button()
 
     def login_register_click(self, x, y):
         if Button_x + ButtonLength >= Button_x <= x:
@@ -354,24 +502,6 @@ class Display:
                 self.login()
             if Button_y - 75 <= y <= Button_y - 75 + ButtonWidth:
                 self.register()
-
-    def add_note_click(self, x, y):
-        if 145 < x < 300 and -140 > y > -200:
-            self.any_screen("", "")
-            note = Note(self.loging)
-            while True:
-                deadline = self.screen.textinput(
-                    "", "Enter the deadline date (day/month/year): ")
-                if deadline.count("/") != 2:
-                    print("Wrong format. Try again.")
-                    continue
-                else:
-                    break
-
-            notes = self.screen.textinput("", "Enter the note: ")
-            note.add_note(deadline, notes)
-            self.any_screen("", "Note added.")
-        self.back_button()
 
     def back_click(self, x, y):
         if -416.0 + 100 >= x >= -416.0:
@@ -387,7 +517,7 @@ class Display:
 
         # Songs
         elif -225.0 + 250 < x < -25.0 + 250 and 120 > y > 20:
-            self.any_screen("", "")
+            self.any_screen()
             self.writer.goto(-300, 200)
             self.writer.write("List of the songs:",
                               font=('Arial', 25, 'normal'))
@@ -399,7 +529,7 @@ class Display:
 
         # News
         elif -225.0 < x < -25.0 and -20 > y > -120:
-            self.any_screen("", "")
+            self.any_screen()
             self.interesting = Interest(self.loging)
             self.writer.goto(-300, 200)
             self.writer.write("List of your interest:",
@@ -425,7 +555,7 @@ class Display:
 
     def change_interest_click(self, x, y):
         if 145 < x < 300 and -140 > y > -200:
-            self.any_screen("", "")
+            self.any_screen()
             self.writer.goto(-300, 200)
             self.writer.write("List of the topics:",
                               font=('Arial', 25, 'normal'))
@@ -444,14 +574,13 @@ class Display:
             interest = self.screen.textinput("",
                                              "What kind of news are you "
                                              "interested? type in oneline. "
-                                             "(Eg. 1 3 4 11) : ")
+                                             "(Ex. 1 3 4 11) : ")
 
             self.interesting.change_interest(interest)
+            self.any_screen("Success", "Your interest has been changed.")
             self.back_button()
 
-        if -416.0 + 100 >= x >= -416.0:
-            if -252.0 <= y <= -202.0:
-                self.menu()
+        self.back_button()
 
 
 def get_mouse_click_coor(x, y):
@@ -463,6 +592,5 @@ d.init_screen("mate", "background/main.png")
 d.login_register_button()
 
 # turtle.onscreenclick(get_mouse_click_coor)
-
 
 turtle.done()
