@@ -66,9 +66,11 @@ class Interest:
         """Return the user's interest"""
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
-            for user in users:
-                if user.get(self.user):
-                    self.interest = user[self.user]['interest']
+            if self.user in users:
+                try:
+                    self.__interest = users[self.user]['interest']
+                except KeyError:
+                    pass
         return self.__interest
 
     @interest.setter
@@ -84,9 +86,9 @@ class Interest:
 
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
-            for user in users:
-                if user.get(self.user):
-                    user[self.user]['interest'] = _list
+            if self.user in users:
+                users[self.user]['interest'] = _list
+                self.interest = _list
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 

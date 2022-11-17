@@ -58,63 +58,53 @@ class Login:
 
     def login(self) -> bool:
         """Login the user to the json file"""
-        with open('user.json', 'r', encoding="utf-8") as file:
-            try:
+        try:
+            with open('user.json', 'r', encoding="utf-8") as file:
                 users = json.load(file)
-            except JSONDecodeError:
-                with open('user.json', 'w', encoding="utf-8") as writable_file:
-                    food = []
-                    json.dump(food, writable_file, indent=4)
-                    users = json.load(file)
-            for user in users:
-                try:
-                    if user[self.user]['password'] == self.password:
-                        return True
-                except KeyError:
-                    pass
+        except JSONDecodeError:
             return False
+        if self.user in users and \
+                self.password == users[self.user]['Password']:
+            return True
+        return False
 
     def register(self) -> None:
         """Register the user to the json file"""
-        with open("user.json", mode='r', encoding='utf-8') as datas:
-            try:
-                data = json.load(datas)
-            except JSONDecodeError:
-                data = []
-        with open("user.json", "w", encoding="utf-8") as json_file:
-            data.append(
-                {
-                    self.user: {
-                        "password": self.password
-                    }
-                }
-            )
-            json.dump(data, json_file, indent=4)
+        new_data = {
+            self.user: {
+                "Password": self.password,
+                "Mail": self.mymail,
+            }
+        }
+        try:
+            with open('user.json', 'r', encoding="utf-8") as file:
+                users = json.load(file)
+        except JSONDecodeError:
+            with open('user.json', 'w', encoding="utf-8") as writable_file:
+                json.dump(new_data, writable_file, indent=4)
+        else:
+            users.update(new_data)
+            with open('user.json', 'w', encoding="utf-8") as writable_file:
+                json.dump(users, writable_file, indent=4)
 
     def check_register(self):
         """Check if the user is registered by checking both username and
         password if the username is existed but the password is not the same,
         it will still register"""
-        with open("user.json", mode='r', encoding='utf-8') as datas:
-            try:
+        try:
+            with open("user.json", mode='r', encoding='utf-8') as datas:
                 data = json.load(datas)
-            except JSONDecodeError:
-                data = []
-            for i in data:
-                if self.user == list(i.keys())[0] and self.password == \
-                        i[self.user]['password']:
-                    return False
-            return True
+        except JSONDecodeError:
+            return False
+        else:
+            if not self.user or self.user in data:
+                return True
+        return False
 
-    def delete_account(self) -> bool:
+    def delete_account(self):
         """Delete the account from the json file"""
         with open('user.json', 'r', encoding="utf-8") as file:
             users = json.load(file)
-            if self.login():
-                for user in users:
-                    if user.get(self.user):
-                        users.remove(user)
-                        with open('user.json', 'w', encoding="utf-8") as _file:
-                            json.dump(users, _file, indent=4)
-                        return True
-            return False
+            users.remove(self.user)
+            with open('user.json', 'w', encoding="utf-8") as _file:
+                json.dump(users, _file, indent=4)

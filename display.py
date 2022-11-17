@@ -251,26 +251,24 @@ class Display:
         username = self.screen.textinput("What is your username?", "Username")
         password = self.screen.textinput("What is your password?", "Password")
         mail = self.screen.textinput("What is your email?", "Email")
-        do = 0
-        while not (username or password or mail):
-            self.any_screen("Error", "Needed to fill all input.")
+        self.loging = Login(username, password, mail)
+        while self.loging.check_register():
+            if not (username and password and mail):
+                self.any_screen("Error", "Needed to fill all input.")
+            else:
+                self.any_screen("Error", "Username already exists.")
             username = self.screen.textinput("What is your username?",
                                              "Username")
             password = self.screen.textinput("What is your password?",
                                              "Password")
             mail = self.screen.textinput("What is your email?", "Email")
+            self.loging = Login(username, password, mail)
+        self.loging.register()
+        self.any_screen(message="You were a successful registrant.")
+        time.sleep(0.75)
+        self.menu()
 
-        self.loging = Login(username, password, mail)
-        if not self.loging.check_register():
-            self.any_screen("Error", "Username is already used.")
-            self.register()
-        else:
-            do += 1
-        if do == 1:
-            self.loging.register()
-            self.any_screen(message="You were a successful registrant.")
-            time.sleep(0.75)
-            self.menu()
+
 
     # Screen
     def menu(self):
