@@ -4,48 +4,47 @@ import requests
 from bs4 import BeautifulSoup
 from login import Login
 
-all_toppics = {
-    1: "Home",
-    2: "War in Ukraine",
-    3: "Coronavirus",
-    4: "Climate",
-    5: "Video",
-    6: "World",
-    7: "Asia",
-    8: "UK",
-    9: "Business",
-    10: "Tech",
-    11: "Science",
-    12: "Stories",
-    13: "Entertainment & Arts",
-    14: "Health"
-}
-
-interest_to_url = {
-
-    "Home": "",
-    "War in Ukraine": "world-60525350",
-    "Coronavirus": "coronavirus",
-    "Climate": "science-environment-56837908",
-    "Video": "av/10462520",
-    "World": "world",
-    "Asia": "asia",
-    "UK": "uk",
-    "Business": "business",
-    "Tech": "technology",
-    "Science": "science_and_environment",
-    "Stories": "stories",
-    "Entertainment & Arts": "entertainment_and_arts"
-}
-
 
 class Interest:
     """This class is all about user's interest"""
+
     def __init__(self, login_class: Login):
         self.__user = login_class.information[0]
         self.__password = login_class.information[1]
         self.__mymail = login_class.information[2]
         self.__interest = []
+        self.all_toppics = {
+            1: "Home",
+            2: "War in Ukraine",
+            3: "Coronavirus",
+            4: "Climate",
+            5: "Video",
+            6: "World",
+            7: "Asia",
+            8: "UK",
+            9: "Business",
+            10: "Tech",
+            11: "Science",
+            12: "Stories",
+            13: "Entertainment & Arts",
+            14: "Health"
+        }
+        self.interest_to_url = {
+
+            "Home": "",
+            "War in Ukraine": "world-60525350",
+            "Coronavirus": "coronavirus",
+            "Climate": "science-environment-56837908",
+            "Video": "av/10462520",
+            "World": "world",
+            "Asia": "asia",
+            "UK": "uk",
+            "Business": "business",
+            "Tech": "technology",
+            "Science": "science_and_environment",
+            "Stories": "stories",
+            "Entertainment & Arts": "entertainment_and_arts"
+        }
 
     @property
     def user(self):
@@ -65,6 +64,11 @@ class Interest:
     @property
     def interest(self):
         """Return the user's interest"""
+        with open('user.json', 'r', encoding='utf-8') as file:
+            users = json.load(file)
+            for user in users:
+                if user.get(self.user):
+                    self.interest = user[self.user]['interest']
         return self.__interest
 
     @interest.setter
@@ -72,24 +76,17 @@ class Interest:
         """Change the user's interest"""
         self.__interest = new_interest
 
-    def add_interest(self):
+    def change_interest(self, new_interest):
         """Add the user's interest"""
-        print("List of the topics: ")
-        for number, topic in all_toppics.items():
-            print(f"{number}. {topic}")
-        print()
-        interest = input(
-            "What kind of news are you interested? type in oneline. "
-            "(Eg. 1 3 4 11) : ")
-
-        for i in interest.split():
-            self.interest.append(all_toppics[int(i)])
+        _list = []
+        for i in new_interest.split():
+            _list.append(self.all_toppics[int(i)])
 
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
             for user in users:
                 if user.get(self.user):
-                    user[self.user]['interest'] = self.interest
+                    user[self.user]['interest'] = _list
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 
@@ -98,7 +95,8 @@ class Interest:
         number = int(input("How many news per each do you want to see? "))
         _list = []
         for interest in self.interest:
-            _list.append(self.show_bbc_new(interest_to_url[interest], number))
+            _list.append(self.show_bbc_new(self.interest_to_url
+                                           [interest], number))
         return _list
 
     @staticmethod
@@ -133,8 +131,7 @@ class Interest:
             _list.append(f"{index + 1}. {song[0]} by {song[1]}")
         return _list
 
-    @staticmethod
-    def show_bbc_new(topic, number):
+    def show_bbc_new(self, topic, number):
         """Show the news of the topic"""
         url = f"https://www.bbc.com/news/{topic}"
         response = requests.get(url, timeout=5)
@@ -143,7 +140,7 @@ class Interest:
         links = soup.find_all(class_="gs-c-promo-heading")
         new = ""
         _list = []
-        for key, value in interest_to_url.items():
+        for key, value in self.interest_to_url.items():
             if value == topic:
                 new = key
         _list.append(f"Here are some news about {new}:")
@@ -169,4 +166,3 @@ class Interest:
         """Show the fortune telling"""
         with open('fortune.txt', 'r', encoding='utf-8') as fortunes:
             return random.choice(fortunes.read().split('%'))
-        
