@@ -43,7 +43,8 @@ class Interest:
             "Tech": "technology",
             "Science": "science_and_environment",
             "Stories": "stories",
-            "Entertainment & Arts": "entertainment_and_arts"
+            "Entertainment & Arts": "entertainment_and_arts",
+            "Health": "health"
         }
 
     @property
@@ -92,11 +93,10 @@ class Interest:
 
     def show_interest_news(self):
         """Show the news of the user's interest"""
-        number = int(input("How many news per each do you want to see? "))
         _list = []
         for interest in self.interest:
             _list.append(self.show_bbc_new(self.interest_to_url
-                                           [interest], number))
+                                           [interest]))
         return _list
 
     @staticmethod
@@ -131,7 +131,7 @@ class Interest:
             _list.append(f"{index + 1}. {song[0]} by {song[1]}")
         return _list
 
-    def show_bbc_new(self, topic, number):
+    def show_bbc_new(self, topic, number=1):
         """Show the news of the topic"""
         url = f"https://www.bbc.com/news/{topic}"
         response = requests.get(url, timeout=5)
@@ -163,6 +163,6 @@ class Interest:
 
     @staticmethod
     def show_fortune_telling():
-        """Show the fortune telling"""
+        """Show the fortune-telling"""
         with open('fortune.txt', 'r', encoding='utf-8') as fortunes:
-            return random.choice(fortunes.read().split('%'))
+            return random.choice(fortunes.read().split('%')).split("\n")[1]

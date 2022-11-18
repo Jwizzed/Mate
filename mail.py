@@ -1,6 +1,9 @@
-import smtplib
-from login import Login
 import json
+import smtplib
+
+from interest import Interest
+from login import Login
+from weather import Weather
 
 
 class Mail:
@@ -91,3 +94,52 @@ class Mail:
                 to_addrs=self.mymail,
                 msg=message
             )
+
+    def create_text(self, interest_class: Interest, weather_class: Weather):
+        """Create the text of the mail."""
+        text = f"Dear {self.user} Here are the headlines you should read:\n\n"
+        for topic in self.__topics_to_send:
+
+            if topic == "Note":
+                text += "- Note \n"
+                with open("user.json", 'r', encoding='utf-8') as notes:
+                    note_list = json.load(notes)[self.user]
+                    for date, note in note_list['Note'].items():
+                        text += f"\t{date}: {note}\n"
+                    text += "\n\n"
+
+            elif topic == "Fortune":
+                text += "- Fortune\n"
+                text += f"\t{interest_class.show_fortune_telling()}"
+                text += "\n\n"
+
+            elif topic == "Food":
+                text += "- Food\n"
+                text += f"\t{interest_class.show_something_to_eat()}"
+                text += "\n\n"
+
+            elif topic == "Song":
+                text += "- Songs\n"
+                for music in interest_class.show_top_10_songs():
+                    text += f"\t{music}\n"
+                text += "\n"
+
+            elif topic == "News":
+                text += "- News"
+                for news in interest_class.show_interest_news():
+                    text += "\n"
+                    text += "\t" + news[0]
+                    text += '\n\t\t' + news[1]
+                    try:
+                        text += '\n\t\t' + news[2].encode('utf-8'). \
+                            decode('utf-8')
+                    except IndexError:
+                        text += '\n\t\t' + "Link broken"
+                text += "\n\n"
+
+            elif topic == "Weather":
+                text += "- Weather"
+                for hour in weather_class.show_weather():
+                    text += f"\n\t{hour}"
+                text += "\n\n"
+        return text

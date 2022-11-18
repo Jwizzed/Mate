@@ -105,6 +105,6 @@ class Login:
         """Delete the account from the json file"""
         with open('user.json', 'r', encoding="utf-8") as file:
             users = json.load(file)
-            users.remove(self.user)
+            del users[self.user]
             with open('user.json', 'w', encoding="utf-8") as _file:
                 json.dump(users, _file, indent=4)
