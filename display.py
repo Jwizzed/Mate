@@ -1,5 +1,9 @@
+import json
+import random
 import time
 import turtle
+
+from geopy.geocoders import Nominatim
 
 from interest import Interest
 from login import Login
@@ -17,7 +21,7 @@ class Display:
         self.loging = None
         self.mail = None
         self.interesting = None
-        self.weather = None
+        self.weather = Weather()
 
     def login_register_button(self) -> None:
         """This function is for login and register button."""
@@ -297,6 +301,67 @@ class Display:
         time.sleep(0.75)
         self.menu()
 
+    def forget_password(self) -> None:
+        """This function is for the user who forget their password."""
+        recovery = random.choice(
+            ["asdlkco", "iqowejoijao", "cmxlkwemqkm, 'kJSDoxcjwdo",
+             "aosjdij123", "1i2u381238ioajds", "jasjnxcjknqw",
+             "190827389712389aksljd", "asjhdjxzhclkiveieicc",
+             "kxcjoieqjcibqojnew", " 18923798123klsdackmldmklckmldklm",
+             "aksdhjlxjcioqjweiojewiojc"])
+        username = self.screen.textinput("Recovery", "What is your username?")
+        email = self.screen.textinput("Recovery", "What is your mail?")
+        with open("user.json", mode="r", encoding="utf-8") as data:
+            users = json.load(data)
+        if username and email:
+            if username in users:
+                if email == users[username]["Mail"]:
+                    password = users[username]["Password"]
+                    self.mail = Mail(Login(username, password, email))
+                    self.mail.send_mail(
+                        f"This is your recovery code '{recovery}' "
+                        f"(not include single quotes).")
+                    recovery_code = self.screen.textinput("Recovery",
+                                                          "Enter your "
+                                                          "recovery code: ")
+                    if recovery_code == recovery:
+                        new_password = self.screen.textinput("Recovery",
+                                                             "Enter your new "
+                                                             "password: ")
+                        with open("user.json", mode="r",
+                                  encoding="utf-8") as data:
+                            users = json.load(data)
+                        users[username]["Password"] = new_password
+                        with open("user.json", mode="w",
+                                  encoding="utf-8") as data:
+                            json.dump(users, data, indent=4)
+                        self.any_screen("Recovery",
+                                        "Your password was changed.")
+                        self.loging = Login(username, new_password, email)
+                        self.menu()
+                    else:
+                        self.any_screen("Error", "Wrong recovery code.")
+                        time.sleep(1.5)
+                        self.init_screen("mate", "background/main.png")
+                        self.login_register_button()
+                else:
+                    self.any_screen("Error", "Wrong email.")
+                    time.sleep(1.5)
+                    self.init_screen("mate", "background/main.png")
+                    self.login_register_button()
+
+            else:
+                self.any_screen("Error", "Not found your username.")
+                time.sleep(1.5)
+                self.init_screen("mate", "background/main.png")
+                self.login_register_button()
+
+        else:
+            self.any_screen("Error", "Needed to fill all input.")
+            time.sleep(1.5)
+            self.init_screen("mate", "background/main.png")
+            self.login_register_button()
+
     # Screen
     def init_screen(self, title: str, background: str) -> None:
         """This function is for init the screen."""
@@ -316,15 +381,18 @@ class Display:
 
     def function_choice(self, func) -> None:
         """This function is for function choice."""
-        ask = self.screen.textinput("", "show or exit? (s/e): ").lower()
-        while ask != "e":
-            if ask == "s":
-                self.any_screen("Wish!", func())
-            elif ask == "e":
-                break
-            else:
-                self.any_screen("Error", "Wrong input.")
-            ask = self.screen.textinput("", "show or exit? (s/e): ").lower()
+        ask = self.screen.textinput("", "show or exit? (s/e): ")
+        if ask:
+            while ask.lower() != "e":
+                if ask.lower() == "s":
+                    self.any_screen("Wish!", func())
+                elif ask.lower() == "e":
+                    break
+                else:
+                    self.any_screen("Error", "Wrong input.")
+                ask = self.screen.textinput("", "show or exit? (s/e): ")
+        else:
+            self.any_screen("Error", "Wrong input.")
         self.back_button()
 
     def any_screen(self, title: str = "", message: str = "",
@@ -338,17 +406,29 @@ class Display:
 
     def weather_screen(self) -> None:
         """This function is for weather screen."""
-        weather = Weather()
+        address = self.screen.textinput("Enter your location",
+                                        "In any languages.")
+        if address:
+            geolocator = Nominatim(user_agent="MyApp")
+            location = geolocator.geocode(address)
+            self.weather = Weather(location.latitude, location.longitude)
+            self.any_screen("Done", "Successfully update your location.")
+        else:
+            self.any_screen("Error", "Something went wrong, using bangkok "
+                                     "location instead.")
+            self.weather = Weather()
+        time.sleep(1.2)
+        self.any_screen(png="background/weather.png")
         for index in range(0, 6):
             self.writer.goto(-230, 120 - (index * 30))
-            self.writer.write(weather.show_weather()[index],
+            self.writer.write(self.weather.show_weather()[index],
                               font=('Arial', 15, 'normal'))
         for index in range(6, 12):
             self.writer.goto(55, 120 - ((index - 5) * 30))
-            self.writer.write(weather.show_weather()[index],
+            self.writer.write(self.weather.show_weather()[index],
                               font=('Arial', 15, 'normal'))
         try:
-            weather.show_weather()[12]
+            self.weather.show_weather()[12]
         except IndexError:
             pass
         else:
@@ -432,13 +512,16 @@ class Display:
                 self.any_screen("", "Wrong input.")
                 self.back_button()
 
-    def login_register_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
+    def login_register_click(self, x_cor: (int, float),
+                             y_cor: (int, float)) -> None:
         """This function is for login and register click."""
-        if 150 >= -150 <= x_cor:
+        if -150 <= x_cor <= 150:
             if 0 <= y_cor <= 50:
                 self.login()
             if -75 <= y_cor <= -25:
                 self.register()
+        if 170 <= x_cor <= 250 and -180 <= y_cor <= -110:
+            self.forget_password()
 
     def back_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
         """This function is for back click."""
@@ -475,9 +558,21 @@ class Display:
             self.writer.write("List of your interest:",
                               font=('Arial', 25, 'normal'))
             if self.interesting.interest:
-                for index, interest in enumerate(self.interesting.interest):
-                    self.writer.goto(-200, 100 - (index * 30))
-                    self.writer.write(interest, font=('Arial', 20, 'normal'))
+                if len(self.interesting.interest) < 8:
+                    for index, interest in enumerate(
+                            self.interesting.interest):
+                        self.writer.goto(-200, 100 - (index * 30))
+                        self.writer.write(interest,
+                                          font=('Arial', 20, 'normal'))
+                else:
+                    for index in range(0, 8):
+                        self.writer.goto(-200, 100 - (index * 30))
+                        self.writer.write(self.interesting.interest[index],
+                                          font=('Arial', 20, 'normal'))
+                    for index in range(8, len(self.interesting.interest)):
+                        self.writer.goto(80, 100 - ((index - 8) * 30))
+                        self.writer.write(self.interesting.interest[index],
+                                          font=('Arial', 20, 'normal'))
             else:
                 self.any_screen("", "No news found.")
             self.back_button()
@@ -516,9 +611,11 @@ class Display:
                                              "What kind of news are you "
                                              "interested? type in oneline. "
                                              "(Ex. 1 3 4 11) : ")
-
-            self.interesting.change_interest(interest)
-            self.any_screen("Success", "Your interest has been changed.")
+            if interest:
+                self.interesting.change_interest(interest)
+                self.any_screen("Success", "Your interest has been changed.")
+            else:
+                self.any_screen("Error", "Wrong input.")
             self.back_button()
 
         self.back_click(x_cor, y_cor)
@@ -563,7 +660,7 @@ class Display:
             while True:
                 deadline = self.screen.textinput(
                     "", "Enter the deadline date (day/month/year): ")
-                if deadline.count("/") != 2:
+                if not deadline or deadline.count("/") != 2:
                     self.any_screen("", "Wrong format. Try again.")
                     continue
                 break
@@ -622,15 +719,17 @@ class Display:
             convert_number_to_topic = {1: "Food", 2: "Song", 3: "Fortune",
                                        4: "Weather", 5: "News", 6: "Note",
                                        7: ""}
-            topics = [convert_number_to_topic[int(index)] for index in
-                      topics.split()]
-            mail.change_topics_to_send(topics)
-            self.any_screen("", "Topics changed.")
+            if topics:
+                topics = [convert_number_to_topic[int(index)] for index in
+                          topics.split()]
+                mail.change_topics_to_send(topics)
+                self.any_screen("", "Topics changed.")
+            else:
+                self.any_screen("Error", "Wrong input.")
             self.back_button()
 
         # Send mail
         if -305 < x_cor < -150 and -140 > y_cor > -200:
-            self.weather = Weather()
             self.interesting = Interest(self.loging)
             self.any_screen()
             self.writer.goto(-200, 100)

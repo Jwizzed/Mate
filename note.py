@@ -47,9 +47,12 @@ class Note:
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
             if self.user in users:
-                if deadline in users[self.user]['Note']:
-                    del users[self.user]['Note'][deadline]
-                else:
+                try:
+                    if deadline in users[self.user]['Note']:
+                        del users[self.user]['Note'][deadline]
+                    else:
+                        return False
+                except KeyError:
                     return False
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
