@@ -620,55 +620,73 @@ class Display:
 
     def delete_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
         """This function is for delete click."""
-
         # Add
         if 145 < x_cor < 300 and -140 > y_cor > -200:
             self.any_screen()
             note = Note(self.loging)
-            while True:
-                deadline = self.screen.textinput(
-                    "", "Enter the deadline date (day/month/year): ")
-                if not deadline:
+            if isinstance(note.show_note(), list) and \
+                    len(note.show_note()) >= 7:
+                ask = self.screen.textinput("",
+                                            "You can only add up to "
+                                            "7 notes. Do you want to "
+                                            "delete note? (y/n): ")
+                if ask:
+                    if ask.lower() == "y":
+                        self.delete_note()
+                    elif ask.lower() == "n":
+                        self.any_screen("Note", "You can't add more ")
+                        self.back_button()
+                else:
+                    self.any_screen("Note", "You can't add more ")
+                    self.back_button()
+            else:
+                while True:
+                    deadline = self.screen.textinput(
+                        "", "Enter the deadline date (day/month/year): ")
+                    if not deadline:
+                        self.any_screen("Error",
+                                        "You must fill in the deadline.")
+                        self.back_button()
+
+                    elif deadline and deadline.count("/") != 2:
+                        self.any_screen("Error", "Wrong format. Try again.")
+                        self.back_button()
+                    else:
+                        break
+
+                if deadline:
+                    notes = self.screen.textinput("", "Enter the note: ")
+                    if notes:
+                        note.add_note(deadline, notes)
+                        self.any_screen("", "Note added.")
+                        self.back_button()
+                    else:
+                        self.any_screen("Error", "You must fill in the note.")
+                        self.back_button()
+                else:
                     self.any_screen("Error", "You must fill in the deadline.")
                     self.back_button()
 
-                elif deadline and deadline.count("/") != 2:
-                    self.any_screen("Error", "Wrong format. Try again.")
-                    self.back_button()
-                else:
-                    break
-
-            if deadline:
-                notes = self.screen.textinput("", "Enter the note: ")
-                if notes:
-                    note.add_note(deadline, notes)
-                    self.any_screen("", "Note added.")
-                    self.back_button()
-                else:
-                    self.any_screen("Error", "You must fill in the note.")
-                    self.back_button()
-            else:
-                self.any_screen("Error", "You must fill in the deadline.")
-                self.back_button()
-
         # Delete
         if -305 < x_cor < -150 and -140 > y_cor > -200:
-            self.any_screen()
-            note = Note(self.loging)
-            while True:
-                deadline = self.screen.textinput(
-                    "", "Enter the deadline date (day/month/year): ")
-                if not deadline or deadline.count("/") != 2:
-                    self.any_screen("", "Wrong format. Try again.")
-                    continue
-                break
-            if note.delete_note(deadline):
-                self.any_screen("", "Note deleted.")
-            else:
-                self.any_screen("", "Note not found.")
-            self.back_button()
-
+            self.delete_note()
         self.back_click(x_cor, y_cor)
+
+    def delete_note(self) -> None:
+        self.any_screen()
+        note = Note(self.loging)
+        while True:
+            deadline = self.screen.textinput(
+                "", "Enter the deadline date (day/month/year): ")
+            if not deadline or deadline.count("/") != 2:
+                self.any_screen("", "Wrong format. Try again.")
+                continue
+            break
+        if note.delete_note(deadline):
+            self.any_screen("", "Note deleted.")
+        else:
+            self.any_screen("", "Note not found.")
+        self.back_button()
 
     def mail_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
         """This function is for mail click."""
