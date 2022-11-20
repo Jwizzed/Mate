@@ -2,9 +2,7 @@ import json
 import random
 import time
 import turtle
-
 from geopy.geocoders import Nominatim
-
 from interest import Interest
 from login import Login
 from mail import Mail
