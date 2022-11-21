@@ -733,7 +733,7 @@ class Display:
             playsound("background/click.mp3")
             self.any_screen()
             self.writer.goto(-260, 150)
-            self.writer.color("white")
+            self.writer.color("#315d79")
             self.writer.write("1.Food - Every morning, one of the menus will "
                               "be delivered to you.",
                               font=('Comic Sans MS', 15, 'normal'))
@@ -793,7 +793,7 @@ class Display:
             for index, news in enumerate(mail.topics_to_send):
                 if news != "":
                     self.writer.goto(-200, 100 - (index + 1) * 40)
-                    self.writer.color("white")
+                    self.writer.color("#315d79")
                     self.writer.write(f"{index + 1}.{news}",
                                       font=('Comic Sans MS', 15, 'normal'))
             ask = self.screen.textinput("Agree? (y/n)", f"The information will"
