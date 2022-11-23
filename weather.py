@@ -35,7 +35,7 @@ class Weather:
         """Change the latitude."""
         self.__lat = new_lat
 
-    def show_weather(self):
+    def get_weather(self):
         """Show the weather in the next 12 hours."""
         weather_params = {
             "lat": self.lat,
@@ -66,7 +66,7 @@ class Weather:
                 "No need to bring an umbrella, There is no rain in 12 hours.")
         return _list
 
-    def show_information(self):
+    def get_information(self):
         """Show the information of the weather."""
         weather_params = {
             "lat": self.lat,

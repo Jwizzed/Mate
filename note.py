@@ -26,7 +26,7 @@ class Note:
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 
-    def show_note(self):
+    def get_note(self):
         """Show the note list of the user"""
         _list = []
         with open('user.json', 'r', encoding='utf-8') as file:

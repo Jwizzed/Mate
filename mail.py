@@ -95,7 +95,8 @@ class Mail:
                 msg=message
             )
 
-    def create_text(self, interest_class: Interest, weather_class: Weather):
+    def create_text_to_send(self, interest_class: Interest,
+                            weather_class: Weather):
         """Create the text of the mail."""
         text = f"Dear {self.user} Here are the headlines you should read:\n\n"
         for topic in self.__topics_to_send:
@@ -110,23 +111,23 @@ class Mail:
 
             elif topic == "Fortune":
                 text += "- Fortune\n"
-                text += f"\t{interest_class.show_fortune_telling()}"
+                text += f"\t{interest_class.get_fortune_telling()}"
                 text += "\n\n"
 
             elif topic == "Food":
                 text += "- Food\n"
-                text += f"\t{interest_class.show_something_to_eat()}"
+                text += f"\t{interest_class.get_something_to_eat()}"
                 text += "\n\n"
 
             elif topic == "Song":
                 text += "- Songs\n"
-                for music in interest_class.show_top_10_songs():
+                for music in interest_class.get_top_10_songs():
                     text += f"\t{music}\n"
                 text += "\n"
 
             elif topic == "News":
                 text += "- News"
-                for news in interest_class.show_interest_news():
+                for news in interest_class.get_interest_news():
                     text += "\n"
                     text += "\t" + news[0]
                     text += '\n\t\t' + news[1]
@@ -139,7 +140,7 @@ class Mail:
 
             elif topic == "Weather":
                 text += "- Weather"
-                for hour in weather_class.show_weather():
+                for hour in weather_class.get_weather():
                     text += f"\n\t{hour}"
                 text += "\n\n"
         return text

@@ -91,23 +91,23 @@ class Interest:
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 
-    def show_interest_news(self):
+    def get_interest_news(self):
         """Show the news of the user's interest"""
         _list = []
         for interest in self.interest:
-            _list.append(self.show_bbc_new(self.interest_to_url
+            _list.append(self.get_bbc_new(self.interest_to_url
                                            [interest]))
         return _list
 
     @staticmethod
-    def show_something_to_eat():
+    def get_something_to_eat():
         """Show the random food"""
         with open("food_list.txt", 'r', encoding='utf-8') as foods:
             food_list = foods.read().splitlines()
             return random.choice(food_list)
 
     @staticmethod
-    def show_top_10_songs(number=10):
+    def get_top_10_songs(number=10):
         """Show the top 100 songs"""
         url = "https://www.billboard.com/charts/hot-100/"
 
@@ -131,7 +131,7 @@ class Interest:
             _list.append(f"{index + 1}. {song[0]} by {song[1]}")
         return _list
 
-    def show_bbc_new(self, topic, number=1):
+    def get_bbc_new(self, topic, number=1):
         """Show the news of the topic"""
         url = f"https://www.bbc.com/news/{topic}"
         response = requests.get(url, timeout=5)
@@ -162,7 +162,7 @@ class Interest:
         return _list
 
     @staticmethod
-    def show_fortune_telling():
+    def get_fortune_telling():
         """Show the fortune-telling"""
         with open('fortune.txt', 'r', encoding='utf-8') as fortunes:
             return random.choice(fortunes.read().split('%')).split("\n")[1]

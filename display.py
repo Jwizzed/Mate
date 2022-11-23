@@ -2,8 +2,10 @@ import json
 import random
 import time
 import turtle
+
 from geopy.geocoders import Nominatim
 from playsound import playsound
+
 from interest import Interest
 from login import Login
 from mail import Mail
@@ -194,7 +196,7 @@ class Display:
                           align="left")
         self.change_interest_button("Add", func)
 
-    def four_interest_buttons(self) -> None:
+    def interest_menu_buttons(self) -> None:
         """This function is for four interest buttons."""
         # Eats
         self.back_button()
@@ -266,8 +268,7 @@ class Display:
             password = self.screen.textinput("What is your password?",
                                              "Password")
             mail = self.screen.textinput("What is your email?", "Email")
-        else:
-            self.loging = Login(username, password, mail)
+        self.loging = Login(username, password, mail)
         while not self.loging.login():
             ask = self.screen.textinput("Your account doesn't existing.",
                                         "Do you want to register? (y/n): ")
@@ -429,7 +430,7 @@ class Display:
         self.any_screen("Weather", png="background/weather.png")
         for index in range(0, 6):
             self.writer.goto(-230, 120 - (index * 30))
-            show_weather = self.weather.show_weather()[index]
+            show_weather = self.weather.get_weather()[index]
             if "not" in show_weather:
                 self.writer.write(show_weather,
                                   font=('Comic Sans MS', 15, 'normal'))
@@ -441,7 +442,7 @@ class Display:
 
         for index in range(6, 12):
             self.writer.goto(55, 120 - ((index - 5) * 30))
-            show_weather = self.weather.show_weather()[index]
+            show_weather = self.weather.get_weather()[index]
             if "not" in show_weather:
                 self.writer.write(show_weather,
                                   font=('Comic Sans MS', 15, 'normal'))
@@ -451,7 +452,7 @@ class Display:
                                   font=('Comic Sans MS', 15, 'normal'))
                 self.writer.color("#315d79")
         try:
-            self.weather.show_weather()[12]
+            self.weather.get_weather()[12]
         except IndexError:
             pass
         else:
@@ -465,8 +466,8 @@ class Display:
             if 75 <= y_cor <= 125:
                 playsound("background/click.mp3")
                 self.any_screen("Interest", png="background/interest.png")
-                self.four_interest_buttons()
-                self.screen.onclick(self.four_interest_click)
+                self.interest_menu_buttons()
+                self.screen.onclick(self.interest_menu_click)
 
             # weather
             if 0 <= y_cor <= 50:
@@ -485,8 +486,8 @@ class Display:
                 self.writer.write("List of your Note:",
                                   font=('Comic Sans MS', 25, 'normal'))
                 self.writer.goto(-200, 50)
-                if note.show_note() != "You don't have any note.":
-                    for index, note in enumerate(note.show_note()):
+                if note.get_note() != "You don't have any note.":
+                    for index, note in enumerate(note.get_note()):
                         self.writer.goto(-200, 50 - (index * 30))
                         self.writer.write(note,
                                           font=('Comic Sans MS', 20, 'normal'))
@@ -563,7 +564,7 @@ class Display:
                 playsound("background/click.mp3")
                 self.menu()
 
-    def four_interest_click(self, x_cor: (int, float), y_cor: (int, float)) \
+    def interest_menu_click(self, x_cor: (int, float), y_cor: (int, float)) \
             -> None:
         """This function is for four interest click."""
         self.interesting = Interest(self.loging)
@@ -572,7 +573,7 @@ class Display:
         if -225.0 < x_cor < -25.0 and 120 > y_cor > 20:
             playsound("background/click.mp3")
             self.any_screen("Eat", "Nom nom nom!")
-            self.function_choice(self.interesting.show_something_to_eat)
+            self.function_choice(self.interesting.get_something_to_eat)
 
         # Songs
         elif 25 < x_cor < 225 and 120 > y_cor > 20:
@@ -581,7 +582,7 @@ class Display:
             self.writer.goto(-300, 200)
             self.writer.write("List of the songs:",
                               font=('Comic Sans MS', 25, 'normal'))
-            for index, song in enumerate(self.interesting.show_top_10_songs()):
+            for index, song in enumerate(self.interesting.get_top_10_songs()):
                 self.writer.goto(-200, 100 - index * 20)
                 self.writer.write(song, font=('Comic Sans MS', 15, 'normal'))
             self.back_button()
@@ -619,7 +620,7 @@ class Display:
         elif 25 < x_cor < 225 and -20 > y_cor > -120:
             playsound("background/click.mp3")
             self.any_screen("Fortune.", "Fortune.")
-            self.function_choice(self.interesting.show_fortune_telling)
+            self.function_choice(self.interesting.get_fortune_telling)
         # Back
         if -316 >= x_cor >= -416.0:
             if -252.0 <= y_cor <= -202.0:
@@ -667,8 +668,8 @@ class Display:
             playsound("background/click.mp3")
             self.any_screen()
             note = Note(self.loging)
-            if isinstance(note.show_note(), list) and \
-                    len(note.show_note()) >= 7:
+            if isinstance(note.get_note(), list) and \
+                    len(note.get_note()) >= 7:
                 ask = self.screen.textinput("",
                                             "You can only add up to "
                                             "7 notes. Do you want to "
@@ -813,17 +814,13 @@ class Display:
                 self.any_screen("Success", "Mail sent.\n It might take a few "
                                            "minutes.")
 
-                mail.send_mail(mail.create_text(self.interesting,
-                                                self.weather).encode('utf-8',
-                                                                     'ignore'))
+                mail.send_mail(mail.create_text_to_send(self.interesting,
+                                                        self.weather).encode(
+                    'utf-8',
+                    'ignore'))
                 self.back_button()
             else:
                 self.any_screen("Mail", "Mail not sent.")
                 self.back_button()
         self.back_click(x_cor, y_cor)
 
-
-d = Display()
-d.init_screen("mate", "background/main.png")
-d.login_register_button()
-turtle.done()
