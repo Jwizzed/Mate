@@ -259,7 +259,15 @@ class Display:
         username = self.screen.textinput("What is your username?", "Username")
         password = self.screen.textinput("What is your password?", "Password")
         mail = self.screen.textinput("What is your email?", "Email")
-        self.loging = Login(username, password, mail)
+        while not (username and password and mail):
+            self.any_screen("Error", "Needed to fill all input.")
+            username = self.screen.textinput("What is your username?",
+                                             "Username")
+            password = self.screen.textinput("What is your password?",
+                                             "Password")
+            mail = self.screen.textinput("What is your email?", "Email")
+        else:
+            self.loging = Login(username, password, mail)
         while not self.loging.login():
             ask = self.screen.textinput("Your account doesn't existing.",
                                         "Do you want to register? (y/n): ")
