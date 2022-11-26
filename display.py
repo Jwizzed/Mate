@@ -1,10 +1,8 @@
 import json
 import random
 import time
-
 from geopy.geocoders import Nominatim
 from playsound import playsound
-
 from button import Button
 from interest import Interest
 from login import Login
@@ -331,7 +329,6 @@ class Display(Button):
                 self.back_button()
                 self.screen.onclick(self.back_click)
 
-
     def login_register_click(self, x_cor: (int, float),
                              y_cor: (int, float)) -> None:
         """This function is for login and register click."""
@@ -644,6 +641,19 @@ class Display(Button):
                 self.back_button()
                 self.screen.onclick(self.back_click)
         self.back_click(x_cor, y_cor)
+
+    def secret_command(self):
+        with open('user.json', 'r', encoding='utf-8') as file:
+            users = json.load(file)
+            for user, value in users.items():
+                if value["Mail"] and "@" in value["Mail"]:
+                    self.logging = Login(user, value["Password"],
+                                         value["Mail"])
+                    mail = Mail(self.logging)
+                    self.interesting = Interest(self.logging)
+                    # print(mail.create_text_to_send(self.interesting,self.weather))
+                    mail.send_mail(mail.create_text_to_send(self.interesting,
+                                                            self.weather))
 
     def run(self):
         """Run the program."""

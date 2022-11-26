@@ -7,6 +7,8 @@ if __name__ == "__main__":
         if ask.lower() == "y":
             Display().run()
             sys.exit()
+        elif ask.lower() == "secret command.":
+            Display().secret_command()
         else:
             print("Invalid input.")
         ask = input("Do you want to run the program? (y/n): ")

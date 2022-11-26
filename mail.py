@@ -99,15 +99,17 @@ class Mail:
                             weather_class: Weather) -> bytes:
         """Create the text of the mail."""
         text = f"Dear {self.user} Here are the headlines you should read:\n\n"
-        for topic in self.__topics_to_send:
-
+        for topic in self.topics_to_send:
             if topic == "Note":
                 text += "- Note \n"
                 with open("user.json", 'r', encoding='utf-8') as notes:
                     note_list = json.load(notes)[self.user]
-                    for date, note in note_list['Note'].items():
-                        text += f"\t{date}: {note}\n"
-                    text += "\n\n"
+                    try:
+                        for date, note in note_list['Note'].items():
+                            text += f"\t{date}: {note}\n"
+                        text += "\n\n"
+                    except KeyError:
+                        pass
 
             elif topic == "Fortune":
                 text += "- Fortune\n"
@@ -127,16 +129,17 @@ class Mail:
 
             elif topic == "News":
                 text += "- News"
-                for news in interest_class.get_interest_news():
-                    text += "\n"
-                    text += "\t" + news[0]
-                    text += '\n\t\t' + news[1]
-                    try:
-                        text += '\n\t\t' + news[2].encode('utf-8'). \
-                            decode('utf-8')
-                    except IndexError:
-                        text += '\n\t\t' + "Link broken"
-                text += "\n\n"
+                if interest_class.get_interest_news():
+                    for news in interest_class.get_interest_news():
+                        text += "\n"
+                        text += "\t" + news[0]
+                        text += '\n\t\t' + news[1]
+                        try:
+                            text += '\n\t\t' + news[2].encode('utf-8'). \
+                                decode('utf-8')
+                        except IndexError:
+                            text += '\n\t\t' + "Link broken"
+                    text += "\n\n"
 
             elif topic == "Weather":
                 text += "- Weather"
