@@ -22,7 +22,7 @@ class Login:
         return self.__user
 
     @user.setter
-    def user(self, new_username) -> None:
+    def user(self, new_username: str) -> None:
         """Change the username"""
         self.__user = new_username
 
@@ -32,7 +32,7 @@ class Login:
         return self.__password
 
     @password.setter
-    def password(self, new_password) -> None:
+    def password(self, new_password: str) -> None:
         """Change the password"""
         self.__password = new_password
 
@@ -42,7 +42,7 @@ class Login:
         return self.__mymail
 
     @mymail.setter
-    def mymail(self, new_mail) -> None:
+    def mymail(self, new_mail: str) -> None:
         """Change the user's mail."""
         self.__mymail = new_mail
 
@@ -52,7 +52,7 @@ class Login:
         return self.__information
 
     @information.setter
-    def information(self, new_information) -> None:
+    def information(self, new_information:list) -> None:
         """Change the information of the user"""
         self.__information = new_information
 
@@ -87,7 +87,7 @@ class Login:
             with open('user.json', 'w', encoding="utf-8") as writable_file:
                 json.dump(users, writable_file, indent=4)
 
-    def check_register(self):
+    def check_register(self) -> bool:
         """Check if the user is registered by checking both username and
         password if the username is existed but the password is not the same,
         it will still register"""
@@ -101,7 +101,7 @@ class Login:
                 return True
         return False
 
-    def delete_account(self):
+    def delete_account(self) -> None:
         """Delete the account from the json file"""
         with open('user.json', 'r', encoding="utf-8") as file:
             users = json.load(file)

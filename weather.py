@@ -11,7 +11,7 @@ class Weather:
     :parameter lon: longitude
     """
 
-    def __init__(self, lat=13.756331, lon=100.501762):
+    def __init__(self, lat: float = 13.756331, lon: float = 100.501762):
         self.__lon = lon
         self.__lat = lat
 
@@ -35,7 +35,7 @@ class Weather:
         """Change the latitude."""
         self.__lat = new_lat
 
-    def get_weather(self):
+    def get_weather(self) -> list:
         """Show the weather in the next 12 hours."""
         weather_params = {
             "lat": self.lat,
@@ -66,7 +66,7 @@ class Weather:
                 "No need to bring an umbrella, There is no rain in 12 hours.")
         return _list
 
-    def get_information(self):
+    def get_information(self) -> list:
         """Show the information of the weather."""
         weather_params = {
             "lat": self.lat,

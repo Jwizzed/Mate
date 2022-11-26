@@ -70,7 +70,7 @@ class Mail:
         """Change the topics to send."""
         self.__topics_to_send = new_topics_to_send
 
-    def change_topics_to_send(self, topics) -> None:
+    def change_topics_to_send(self, topics: list) -> None:
         """Add topics to send."""
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
@@ -84,7 +84,7 @@ class Mail:
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 
-    def send_mail(self, message) -> None:
+    def send_mail(self, message: str) -> None:
         """Send a mail to the user's mail."""
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
@@ -96,7 +96,7 @@ class Mail:
             )
 
     def create_text_to_send(self, interest_class: Interest,
-                            weather_class: Weather):
+                            weather_class: Weather) -> str:
         """Create the text of the mail."""
         text = f"Dear {self.user} Here are the headlines you should read:\n\n"
         for topic in self.__topics_to_send:

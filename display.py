@@ -19,7 +19,7 @@ class Display:
     def __init__(self) -> None:
         self.writer = turtle.Pen()
         self.screen = turtle.Screen()
-        self.loging = None
+        self.logging = None
         self.mail = None
         self.interesting = None
         self.weather = Weather()
@@ -268,12 +268,12 @@ class Display:
             password = self.screen.textinput("What is your password?",
                                              "Password")
             mail = self.screen.textinput("What is your email?", "Email")
-        self.loging = Login(username, password, mail)
-        while not self.loging.login():
+        self.logging = Login(username, password, mail)
+        while not self.logging.login():
             ask = self.screen.textinput("Your account doesn't existing.",
                                         "Do you want to register? (y/n): ")
             if ask.lower() == 'y':
-                self.loging.register()
+                self.logging.register()
                 self.any_screen(message="You were a successful registrant.")
             elif ask.lower() == 'n':
                 username = self.screen.textinput("What is your username?",
@@ -281,7 +281,7 @@ class Display:
                 password = self.screen.textinput("What is your password?",
                                                  "Password")
                 mail = self.screen.textinput("What is your email?", "Email")
-                self.loging = Login(username, password, mail)
+                self.logging = Login(username, password, mail)
             else:
                 self.any_screen("Error", "Wrong input.")
         self.any_screen(message="Login successful.")
@@ -293,8 +293,8 @@ class Display:
         username = self.screen.textinput("What is your username?", "Username")
         password = self.screen.textinput("What is your password?", "Password")
         mail = self.screen.textinput("What is your email?", "Email")
-        self.loging = Login(username, password, mail)
-        while self.loging.check_register():
+        self.logging = Login(username, password, mail)
+        while self.logging.check_register():
             if not (username and password and mail):
                 self.any_screen("Error", "Needed to fill all input.")
             else:
@@ -304,8 +304,8 @@ class Display:
             password = self.screen.textinput("What is your password?",
                                              "Password")
             mail = self.screen.textinput("What is your email?", "Email")
-            self.loging = Login(username, password, mail)
-        self.loging.register()
+            self.logging = Login(username, password, mail)
+        self.logging.register()
         self.any_screen(message="You were a successful registrant.")
         time.sleep(0.75)
         self.menu()
@@ -346,7 +346,7 @@ class Display:
                             json.dump(users, data, indent=4)
                         self.any_screen("Recovery",
                                         "Your password was changed.")
-                        self.loging = Login(username, new_password, email)
+                        self.logging = Login(username, new_password, email)
                         self.menu()
                     else:
                         self.any_screen("Error", "Wrong recovery code.")
@@ -480,7 +480,7 @@ class Display:
             if -75 <= y_cor <= -25:
                 playsound("background/click.mp3")
                 self.any_screen("Note", png="background/note.png")
-                note = Note(self.loging)
+                note = Note(self.logging)
 
                 self.writer.goto(-200, 100)
                 self.writer.write("List of your Note:",
@@ -501,7 +501,7 @@ class Display:
             if -145 <= y_cor <= -95:
                 playsound("background/click.mp3")
                 self.any_screen("Mail", png="background/mail.png")
-                mails = Mail(self.loging)
+                mails = Mail(self.logging)
                 self.writer.goto(-200, 100)
                 self.writer.write("List of subscribed topics: ",
                                   font=('Comic Sans MS', 25, 'normal'))
@@ -525,8 +525,8 @@ class Display:
                 password = self.screen.textinput("Confirm."
                                                  "",
                                                  "Fill in your password")
-                if password == self.loging.password:
-                    self.loging.delete_account()
+                if password == self.logging.password:
+                    self.logging.delete_account()
                     self.any_screen("Delete", "Account deleted.")
                     time.sleep(0.75)
                     self.init_screen("mate", "background/main.png")
@@ -567,7 +567,7 @@ class Display:
     def interest_menu_click(self, x_cor: (int, float), y_cor: (int, float)) \
             -> None:
         """This function is for four interest click."""
-        self.interesting = Interest(self.loging)
+        self.interesting = Interest(self.logging)
 
         # Eats
         if -225.0 < x_cor < -25.0 and 120 > y_cor > 20:
@@ -591,7 +591,7 @@ class Display:
         elif -225.0 < x_cor < -25.0 and -20 > y_cor > -120:
             playsound("background/click.mp3")
             self.any_screen()
-            self.interesting = Interest(self.loging)
+            self.interesting = Interest(self.logging)
             self.writer.goto(-300, 200)
             self.writer.write("List of your interest:",
                               font=('Comic Sans MS', 25, 'normal'))
@@ -667,7 +667,7 @@ class Display:
         if 145 < x_cor < 300 and -140 > y_cor > -200:
             playsound("background/click.mp3")
             self.any_screen()
-            note = Note(self.loging)
+            note = Note(self.logging)
             if isinstance(note.get_note(), list) and \
                     len(note.get_note()) >= 7:
                 ask = self.screen.textinput("",
@@ -719,7 +719,7 @@ class Display:
 
     def delete_note(self) -> None:
         self.any_screen()
-        note = Note(self.loging)
+        note = Note(self.logging)
         while True:
             deadline = self.screen.textinput(
                 "", "Enter the deadline date (day/month/year): ")
@@ -737,7 +737,7 @@ class Display:
         """This function is for mail click."""
 
         # add
-        mail = Mail(self.loging)
+        mail = Mail(self.logging)
         if 145 < x_cor < 300 and -140 > y_cor > -200:
             playsound("background/click.mp3")
             self.any_screen()
@@ -794,7 +794,7 @@ class Display:
         # Send mail
         if -305 < x_cor < -150 and -140 > y_cor > -200:
             playsound("background/click.mp3")
-            self.interesting = Interest(self.loging)
+            self.interesting = Interest(self.logging)
             self.any_screen()
             self.writer.goto(-200, 100)
             self.writer.write("List of subscribed topics: ",
@@ -816,11 +816,15 @@ class Display:
 
                 mail.send_mail(mail.create_text_to_send(self.interesting,
                                                         self.weather).encode(
-                    'utf-8',
-                    'ignore'))
+                    'utf-8', 'ignore'))
                 self.back_button()
             else:
                 self.any_screen("Mail", "Mail not sent.")
                 self.back_button()
         self.back_click(x_cor, y_cor)
 
+    def run(self):
+        """Run the program."""
+        self.init_screen("mate", "background/main.png")
+        self.login_register_button()
+        self.screen.mainloop()

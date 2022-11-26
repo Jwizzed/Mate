@@ -1,4 +1,5 @@
 import json
+
 from login import Login
 
 
@@ -13,7 +14,7 @@ class Note:
         """Return the username"""
         return self.__user
 
-    def add_note(self, deadline, note):
+    def add_note(self, deadline: str, note: str) -> None:
         """Add note to the user's note list"""
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
@@ -26,7 +27,7 @@ class Note:
         with open('user.json', 'w', encoding='utf-8') as file:
             json.dump(users, file, indent=4)
 
-    def get_note(self):
+    def get_note(self) -> (list, str):
         """Show the note list of the user"""
         _list = []
         with open('user.json', 'r', encoding='utf-8') as file:
@@ -42,7 +43,7 @@ class Note:
             x.split(":")[0].split("/")[1]) * 10 + int(
             x.split(":")[0].split("/")[0]), reverse=False)
 
-    def delete_note(self, deadline):
+    def delete_note(self, deadline: str) -> bool:
         """Delete the note from the user's note list"""
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
