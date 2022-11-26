@@ -300,31 +300,37 @@ class Display(Button):
             ask = self.screen.textinput("Agree? (y/n)",
                                         "Do you want to delete your "
                                         "account?")
-            if ask in "yY":
-                password = self.screen.textinput("Confirm."
-                                                 "",
-                                                 "Fill in your password")
-                if password == self.logging.password:
-                    self.logging.delete_account()
-                    self.any_screen("Delete", "Account deleted.")
-                    time.sleep(0.75)
-                    self.init_screen("mate", "background/main.png")
-                    self.login_register_button()
-                    self.screen.onclick(self.login_register_click)
-                else:
-                    self.any_screen("Error", "Wrong password.")
+            if ask:
+                if ask in "yY":
+                    password = self.screen.textinput("Confirm."
+                                                     "",
+                                                     "Fill in your password")
+                    if password == self.logging.password:
+                        self.logging.delete_account()
+                        self.any_screen("Delete", "Account deleted.")
+                        time.sleep(0.75)
+                        self.init_screen("mate", "background/main.png")
+                        self.login_register_button()
+                        self.screen.onclick(self.login_register_click)
+                    else:
+                        self.any_screen("Error", "Wrong password.")
+                        self.back_button()
+                        self.screen.onclick(self.back_click)
+
+                elif ask in "nN":
+                    self.any_screen("Not delete", "Account not deleted.")
                     self.back_button()
                     self.screen.onclick(self.back_click)
 
-            elif ask in "nN":
-                self.any_screen("Not delete", "Account not deleted.")
-                self.back_button()
-                self.screen.onclick(self.back_click)
-
+                else:
+                    self.any_screen("Error", "Wrong input.")
+                    self.back_button()
+                    self.screen.onclick(self.back_click)
             else:
                 self.any_screen("Error", "Wrong input.")
                 self.back_button()
                 self.screen.onclick(self.back_click)
+
 
     def login_register_click(self, x_cor: (int, float),
                              y_cor: (int, float)) -> None:
@@ -630,8 +636,7 @@ class Display(Button):
                                 "minutes.")
 
                 mail.send_mail(mail.create_text_to_send(self.interesting,
-                                                        self.weather).encode(
-                    'utf-8', 'ignore'))
+                                                        self.weather))
                 self.back_button()
                 self.screen.onclick(self.back_click)
             else:

@@ -113,7 +113,7 @@ class Interest:
         """Show the top 100 songs"""
         url = "https://www.billboard.com/charts/hot-100/"
 
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=60)
         website_html = response.text
 
         soup = BeautifulSoup(website_html, "html.parser")
@@ -136,7 +136,7 @@ class Interest:
     def get_bbc_new(self, topic: str, number: int = 1) -> list:
         """Show the news of the topic"""
         url = f"https://www.bbc.com/news/{topic}"
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=60)
         website_html = response.text
         soup = BeautifulSoup(website_html, "html.parser")
         links = soup.find_all(class_="gs-c-promo-heading")
