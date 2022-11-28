@@ -35,10 +35,10 @@ Since Mate is a program that is still in development, there are some features th
 Since some of Mate's functions couldn't be done by using just the python built-in modules, So there is some additional requirement for the user to run Mate.
 ### Requirement
 - `Python` >= 3.7 w/ Tk/Tcl installed
-- `geopy.geocoders` (For find a location's latitude and longitude by using a location's name)
+- `Nominatim` (For find a location's latitude and longitude by using a location's name)
 - `playsound` (For playing a sound effect)
 - `requests` (For using API data)
-- `bs4` (For web scraping from bbc.com and billboard.com)
+- `BeautifulSoup` (For web scraping from bbc.com and billboard.com)
 - `time` (For using time.sleep() function)
 - `smtplib` (For sending an email to the user)
 
