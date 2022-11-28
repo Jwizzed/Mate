@@ -651,7 +651,6 @@ class Display(Button):
                                          value["Mail"])
                     mail = Mail(self.logging)
                     self.interesting = Interest(self.logging)
-                    # print(mail.create_text_to_send(self.interesting,self.weather))
                     mail.send_mail(mail.create_text_to_send(self.interesting,
                                                             self.weather))
 
