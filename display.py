@@ -27,7 +27,7 @@ class Display(Button):
         username = self.screen.textinput("What is your username?", "Username")
         password = self.screen.textinput("What is your password?", "Password")
         mail = self.screen.textinput("What is your email?", "Email")
-        while not (username and password and mail):
+        while not username or (not password) or (not mail):
             self.any_screen("Error", "Needed to fill all input.")
             username = self.screen.textinput("What is your username?",
                                              "Username")
