@@ -52,7 +52,7 @@ class Login:
         return self.__information
 
     @information.setter
-    def information(self, new_information:list) -> None:
+    def information(self, new_information: list) -> None:
         """Change the information of the user"""
         self.__information = new_information
 
@@ -60,11 +60,10 @@ class Login:
         """Login the user to the json file"""
         try:
             with open('user.json', 'r', encoding="utf-8") as file:
-                users = json.load(file)
+                user = json.load(file)
         except JSONDecodeError:
             return False
-        if self.user in users and \
-                self.password == users[self.user]['Password']:
+        if self.user in user and self.password == user[self.user]['Password']:
             return True
         return False
 

@@ -2,6 +2,8 @@ import turtle
 
 
 class Button:
+    """This class is for draw a button in Display class"""
+
     def __init__(self):
         self.writer = turtle.Pen()
         self.screen = turtle.Screen()
@@ -20,8 +22,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-18, 15)
         self.writer.color("white")
-        self.writer.write("Login", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Login",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
 
         # register button
         self.writer.begin_fill()
@@ -34,8 +36,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-20, -60)
         self.writer.color("white")
-        self.writer.write("Register", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Register",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
 
     def menu_button(self) -> None:
         """This function is for menu button."""
@@ -51,8 +53,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-20, 15)
         self.writer.color("white")
-        self.writer.write("Weather", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Weather",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # note button
         self.writer.penup()
         self.writer.begin_fill()
@@ -65,8 +67,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-13, -60)
         self.writer.color("white")
-        self.writer.write("Note", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Note",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # interest button
         self.writer.penup()
         self.writer.begin_fill()
@@ -79,8 +81,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-23, 90)
         self.writer.color("white")
-        self.writer.write("Interest", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Interest",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # mail button
         self.writer.penup()
         self.writer.begin_fill()
@@ -93,9 +95,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-10, -130)
         self.writer.color("white")
-        self.writer.write("Mail", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
-
+        self.writer.write("Mail",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
 
     def back_button(self) -> None:
         """This function is for back button."""
@@ -109,8 +110,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-380.0, -237.0)
         self.writer.color("#315d79")
-        self.writer.write("Back", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Back",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
 
     def change_interest_button(self, msg: str, func) -> None:
         """This function is for change interest button."""
@@ -125,8 +126,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(215 - len(msg), -180)
         self.writer.color("#315d79")
-        self.writer.write(msg, font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write(msg,
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # back button
         self.writer.penup()
         self.writer.color("white")
@@ -138,8 +139,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-380, -237.0)
         self.writer.color("#315d79")
-        self.writer.write("Back", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Back",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         self.screen.onclick(func)
 
     def mail_button(self) -> None:
@@ -155,8 +156,9 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-260, -180)
         self.writer.color("#315d79")
-        self.writer.write("Send mail", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write(
+            "Send mail", font=("Comic Sans MS", 15, "normal"), align="left"
+        )
 
     def delete_button(self, func) -> None:
         """This function is for delete button."""
@@ -171,8 +173,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(-250, -180)
         self.writer.color("#315d79")
-        self.writer.write("Delete", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Delete",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         self.change_interest_button("Add", func)
 
     def interest_menu_buttons(self) -> None:
@@ -190,8 +192,8 @@ class Button:
         self.writer.goto(-190, 65)
         self.writer.forward(50)
         self.writer.color("#315d79")
-        self.writer.write("Eats", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Eats",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # Songs
         self.writer.penup()
         self.writer.color("white")
@@ -203,8 +205,8 @@ class Button:
         self.writer.end_fill()
         self.writer.goto(105, 65)
         self.writer.color("#315d79")
-        self.writer.write("Songs", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Songs",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # News
         self.writer.penup()
         self.writer.color("white")
@@ -217,8 +219,8 @@ class Button:
         self.writer.goto(-190, -80)
         self.writer.forward(50)
         self.writer.color("#315d79")
-        self.writer.write("News", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("News",
+                          font=("Comic Sans MS", 15, "normal"), align="left")
         # Fortune
         self.writer.penup()
         self.writer.color("white")
@@ -231,5 +233,5 @@ class Button:
         self.writer.goto(60, -80)
         self.writer.forward(40)
         self.writer.color("#315d79")
-        self.writer.write("Fortune", font=('Comic Sans MS', 15, 'normal'),
-                          align="left")
+        self.writer.write("Fortune",
+                          font=("Comic Sans MS", 15, "normal"), align="left")

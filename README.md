@@ -43,7 +43,7 @@ Since some of Mate's functions couldn't be done by using just the python built-i
 - `smtplib` (For sending an email to the user)
 
 You can install dependencies by following command.
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -52,9 +52,28 @@ Make sure you have all the required software installed.
 ```bash
 ~/ > git clone https://github.com/Jwizzed/Mate.git
 ~/ > cd Mate
- > python main.py]
+ > python main.py
 ```
 
+### How to use Mate?
+- First, at the initial screen user will need to choose a login, register, or forget the password (the yellow circle) by clicking then the console will ask you for the information.
+
+![Login](md_pictures/login.jpeg)
+
+- After the user has already login to the program, The program will be no longer in the console anymore and have 5 buttons for the user to choose which are
+  - **Interest**: In the interesting menu, There will have 4 buttons to choose from.
+    - Eats: Give the user random food menu.
+    - Song: Give the user the top 100 songs
+    - News: Collect the user's interest ***for sending a mail.***
+    - Fortune: Give the user random fortune telling.
+  - **Weather**: To check the current weather.
+  - **Note**: To write some things down the user must give both date and some text.
+    - Add: To add a note.
+    - Delete: To delete a note.
+  - **Mail**: For choose what topics you want in a mail and send mail.
+    - Change: To change/select the mail's topics.
+    - Send mail: To send the mail to the user's mail.
+  - **Delete** the account (The blue bin)
 
 ## Program Design
 

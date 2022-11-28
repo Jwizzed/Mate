@@ -24,55 +24,49 @@ class Display(Button):
     # Login/Register
     def login(self) -> None:
         """This function is for login."""
-        username = self.screen.textinput("What is your username?", "Username")
-        password = self.screen.textinput("What is your password?", "Password")
-        mail = self.screen.textinput("What is your email?", "Email")
+        username = input("What is your username?: ")
+        password = input("What is your password?: ")
+        mail = input("What is your email?: ")
         while not username or (not password) or (not mail):
-            self.any_screen("Error", "Needed to fill all input.")
-            username = self.screen.textinput("What is your username?",
-                                             "Username")
-            password = self.screen.textinput("What is your password?",
-                                             "Password")
-            mail = self.screen.textinput("What is your email?", "Email")
+            print("Error", "Needed to fill all input.")
+            username = input("What is your username?: ")
+            password = input("What is your password?: ")
+            mail = input("What is your email?: ")
         self.logging = Login(username, password, mail)
         while not self.logging.login():
-            ask = self.screen.textinput("Your account doesn't existing.",
-                                        "Do you want to register? (y/n): ")
+            ask = input("Your account doesn't existing. "
+                        "Do you want to register? (y/n): ")
             if ask.lower() == 'y':
                 self.logging.register()
-                self.any_screen(message="You were a successful registrant.")
+                print("You were a successful registrant.")
             elif ask.lower() == 'n':
-                username = self.screen.textinput("What is your username?",
-                                                 "Username")
-                password = self.screen.textinput("What is your password?",
-                                                 "Password")
-                mail = self.screen.textinput("What is your email?", "Email")
+                username = input("What is your username?: ")
+                password = input("What is your password?: ")
+                mail = input("What is your email?: ")
                 self.logging = Login(username, password, mail)
             else:
-                self.any_screen("Error", "Wrong input.")
-        self.any_screen(message="Login successful.")
+                print("Wrong input.")
+        print("Login successful.")
         time.sleep(0.75)
         self.menu()
 
     def register(self) -> None:
         """This function is for register."""
-        username = self.screen.textinput("What is your username?", "Username")
-        password = self.screen.textinput("What is your password?", "Password")
-        mail = self.screen.textinput("What is your email?", "Email")
+        username = input("What is your username?: ")
+        password = input("What is your password?: ")
+        mail = input("What is your email?: ")
         self.logging = Login(username, password, mail)
         while self.logging.check_register():
-            if not (username and password and mail):
-                self.any_screen("Error", "Needed to fill all input.")
+            if not username or (not password) or (not mail):
+                print("Needed to fill all input.")
             else:
-                self.any_screen("Error", "Username already exists.")
-            username = self.screen.textinput("What is your username?",
-                                             "Username")
-            password = self.screen.textinput("What is your password?",
-                                             "Password")
-            mail = self.screen.textinput("What is your email?", "Email")
+                print("Username already exists.")
+            username = input("What is your username?: ")
+            password = input("What is your password?: ")
+            mail = input("What is your email?: ")
             self.logging = Login(username, password, mail)
         self.logging.register()
-        self.any_screen(message="You were a successful registrant.")
+        print("You were a successful registrant.")
         time.sleep(0.75)
         self.menu()
 
@@ -84,8 +78,8 @@ class Display(Button):
              "190827389712389aksljd", "asjhdjxzhclkiveieicc",
              "kxcjoieqjcibqojnew", " 18923798123klsdackmldmklckmldklm",
              "aksdhjlxjcioqjweiojewiojc"])
-        username = self.screen.textinput("Recovery", "What is your username?")
-        email = self.screen.textinput("Recovery", "What is your mail?")
+        username = input("What is your username?: ")
+        email = input("What is your email?: ")
         with open("user.json", mode="r", encoding="utf-8") as data:
             users = json.load(data)
         if username and email:
@@ -93,16 +87,12 @@ class Display(Button):
                 if email == users[username]["Mail"]:
                     password = users[username]["Password"]
                     self.mail = Mail(Login(username, password, email))
-                    self.mail.send_mail(
-                        f"This is your recovery code '{recovery}' "
-                        f"(not include single quotes).")
-                    recovery_code = self.screen.textinput("Recovery",
-                                                          "Enter your "
-                                                          "recovery code: ")
+                    self.mail.send_mail(f"This is your "
+                                        f"recovery code '{recovery}' "
+                                        f"(not include single quotes).")
+                    recovery_code = input("Enter your recovery code: ")
                     if recovery_code == recovery:
-                        new_password = self.screen.textinput("Recovery",
-                                                             "Enter your new "
-                                                             "password: ")
+                        new_password = input("Enter your new password: ")
                         with open("user.json", mode="r",
                                   encoding="utf-8") as data:
                             users = json.load(data)
@@ -110,32 +100,31 @@ class Display(Button):
                         with open("user.json", mode="w",
                                   encoding="utf-8") as data:
                             json.dump(users, data, indent=4)
-                        self.any_screen("Recovery",
-                                        "Your password was changed.")
+                        print("Your password was changed.")
                         self.logging = Login(username, new_password, email)
                         self.menu()
                     else:
-                        self.any_screen("Error", "Wrong recovery code.")
+                        print("Error", "Wrong recovery code.")
                         time.sleep(1.5)
                         self.init_screen("mate", "background/main.png")
                         self.login_register_button()
                         self.screen.onclick(self.login_register_click)
                 else:
-                    self.any_screen("Error", "Wrong email.")
+                    print("Error", "Wrong email.")
                     time.sleep(1.5)
                     self.init_screen("mate", "background/main.png")
                     self.login_register_button()
                     self.screen.onclick(self.login_register_click)
 
             else:
-                self.any_screen("Error", "Not found your username.")
+                print("Error", "Not found your username.")
                 time.sleep(1.5)
                 self.init_screen("mate", "background/main.png")
                 self.login_register_button()
                 self.screen.onclick(self.login_register_click)
 
         else:
-            self.any_screen("Error", "Needed to fill all input.")
+            print("Error", "Needed to fill all input.")
             time.sleep(1.5)
             self.init_screen("mate", "background/main.png")
             self.login_register_button()
@@ -457,8 +446,7 @@ class Display(Button):
 
         self.back_click(x_cor, y_cor)
 
-    def delete_click(self, x_cor: (int, float),
-                     y_cor: (int, float)) -> None:
+    def delete_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
         """This function is for delete click."""
         # Add
         if 145 < x_cor < 300 and -140 > y_cor > -200:
@@ -525,15 +513,14 @@ class Display(Button):
         self.back_click(x_cor, y_cor)
 
     def delete_note(self) -> None:
+        """This function is for delete note."""
         self.any_screen()
         note = Note(self.logging)
         while True:
             deadline = self.screen.textinput(
                 "", "Enter the deadline date (day/month/year): ")
             if not deadline or deadline.count("/") != 2:
-                self.any_screen("Error", "Wrong format. Try again.")
-                continue
-            break
+                break
         if note.delete_note(deadline):
             self.any_screen("Success", "Note deleted.")
         else:
@@ -543,7 +530,6 @@ class Display(Button):
 
     def mail_click(self, x_cor: (int, float), y_cor: (int, float)) -> None:
         """This function is for mail click."""
-
         # add
         mail = Mail(self.logging)
         if 145 < x_cor < 300 and -140 > y_cor > -200:
@@ -643,6 +629,7 @@ class Display(Button):
         self.back_click(x_cor, y_cor)
 
     def secret_command(self):
+        """This function is for sending all user's mail at once."""
         with open('user.json', 'r', encoding='utf-8') as file:
             users = json.load(file)
             for user, value in users.items():
