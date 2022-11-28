@@ -1,6 +1,5 @@
 import json
 import smtplib
-
 from interest import Interest
 from login import Login
 from weather import Weather

@@ -42,6 +42,11 @@ Since some of Mate's functions couldn't be done by using just the python built-i
 - `time` (For using time.sleep() function)
 - `smtplib` (For sending an email to the user)
 
+You can install dependencies by following command.
+```
+pip install -r requirements.txt
+```
+
 ### Launch Instructions
 Make sure you have all the required software installed.
 ```bash
