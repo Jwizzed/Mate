@@ -474,18 +474,21 @@ class Display(Button):
                 while True:
                     deadline = self.screen.textinput(
                         "", "Enter the deadline date (day/month/year): ")
-                    current_date = int(time.strftime("%Y%m%d", time.localtime()))
-                    date = int(''.join(i.rjust(2, "0") for i in deadline.split("/")[::-1]))
-                    if not deadline:
+                    if deadline:
+                        if deadline.count("/") == 2:
+                            current_date = int(time.strftime("%Y%m%d", time.localtime()))
+                            date = int(''.join(i.rjust(2, "0") for i in deadline.split("/")[::-1]))
+                            if date < current_date:
+                                self.any_screen("Error",
+                                                "Can't record the past.")
+                            else:
+                                break
+                        else:
+                            self.any_screen("Error",
+                                            "Wrong format. Try again.")
+                    else:
                         self.any_screen("Error",
                                         "You must fill in the deadline.")
-
-                    elif deadline and deadline.count("/") != 2:
-                        self.any_screen("Error", "Wrong format. Try again.")
-                    elif date < current_date:
-                        self.any_screen("Error", "Can't record the past.")
-                    else:
-                        break
                     self.back_button()
                     self.screen.onclick(self.back_click)
 
