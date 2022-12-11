@@ -1,5 +1,4 @@
-time
-BeautifulSoup
+beautifulsoup4==4.11.1
 requests
 playsound
 Nominatim
