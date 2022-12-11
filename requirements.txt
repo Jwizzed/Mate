@@ -1,4 +1,3 @@
-Python>=3.7
 smtplib
 time
 BeautifulSoup
