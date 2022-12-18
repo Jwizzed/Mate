@@ -33,6 +33,9 @@ Since Mate is a program that is still in development, there are some features th
 
 ## How to run Mate?
 Since some of Mate's functions couldn't be done by using just the python built-in modules, So there is some additional requirement for the user to run Mate.
+```
+Warning!! Some of this program's function doesn't work for window user. I apologize if you get any errors in my program. I will try my best to fix it as soon as possible.
+```
 ### Requirement
 - `Python` >= 3.7 w/ Tk/Tcl installed
 - `Nominatim` (For find a location's latitude and longitude by using a location's name)
